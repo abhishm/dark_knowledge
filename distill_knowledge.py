@@ -96,19 +96,15 @@ def get_model(num_hidden_units, normalize_vars, use_probs):
         vars_ = [w1, b1, w2, b2, w3, b3]
         delta_vars = [delta_w1, delta_b1, delta_w2, delta_b2, delta_w3, delta_b3]
         grads = tf.gradients(loss, vars_)
-        assign_op_delta_vars = []
         assign_op_vars = []
         for var, delta_var, grad in zip(vars_, delta_vars, grads):
             assign_op_delta_var = delta_var.assign(momentum * delta_var - (1 - momentum) * learning_rate * grad)
-            assign_op_delta_vars.append(assign_op_delta_var)
-            if normalize_vars:
-                assign_op_var = var.assign(tf.clip_by_norm(var + delta_var, max_norm, axes=[0]))
-            else:
-                assign_op_var = var.assign(var + delta_var)
+            with tf.control_dependencies([assign_op_delta_var]):
+                if normalize_vars:
+                    assign_op_var = var.assign(tf.clip_by_norm(var + delta_var, max_norm, axes=[0]))
+                else:
+                    assign_op_var = var.assign(var + delta_var)
             assign_op_vars.append(assign_op_var)
-        update_deltas = tf.group(*assign_op_delta_vars)
-        with tf.control_dependencies([update_deltas]):
-            train_op = tf.group(*assign_op_vars)
         return train_op, missclassification_error, logits
 
 def get_params(model_type):
