@@ -24,7 +24,7 @@
              "keep_prob_visible_unit": 1.0,
              "jitter_images": 0,
              "num_hidden_units": 800,
-             "initial_learning_rate": 1,
+             "initial_learning_rate": 0.001,
              "use_probs": 0,
              "optimizer": "Momentum"},
    "distill":
@@ -32,7 +32,7 @@
              "keep_prob_visible_unit": 1.0,
              "jitter_images": 0,
              "num_hidden_units": 800,
-             "initial_learning_rate": 2,
+             "initial_learning_rate": 0.1,
              "use_probs": 1,
              "optimizer": "Momentum"}
 

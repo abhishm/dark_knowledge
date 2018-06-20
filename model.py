@@ -1,5 +1,5 @@
-import sys
 import json
+import argparse
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -99,10 +99,8 @@ class Model(object):
             lr *= self.config["learning_rate_decay"]
             if (epoch + 1) % self.config["show_every"] == 0:
                 test_miss_class = self.session.run(self.missclassification_error,
-                                           feed_dict={self.x: x_test,
-                                                      self.y: y_test,
-                                                      self.keep_prob_hidden_unit: 1.0,
-                                                      self.keep_prob_visible_unit: 1.0})
+                                                   feed_dict={self.x: x_test,
+                                                              self.y: y_test})
                 print("epoc: {0}, train_miss_class: {1:0.0f}, test_miss_class: {2:0.0f}"
                       .format(epoch, np.sum(miss_classes), test_miss_class))
                 self.training_miss_classifications.append(np.sum(miss_classes))
@@ -118,7 +116,13 @@ class Model(object):
             self.saver.save(self.session, "checkpoint/" + self.network_type)
 
 if __name__ == "__main__":
-    model = Model("ensemble")
+    parser = argparse.ArgumentParser(description="Train a model")
+    parser.add_argument("-n", default="ensemble", choices=["ensemble", "small", "distill"], dest="model_name")
+    args = parser.parse_args()
+    print("--" * 30)
+    print("Training a --- {} --- model".format(args.model_name))
+    print("--" * 30)
+    model = Model(args.model_name)
     model.train()
     model.save()
 
