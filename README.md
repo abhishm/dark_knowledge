@@ -8,7 +8,7 @@ This repository contains my work of replicating the Geoffrey Hinton's [work](htt
    1. The missclassification error of the big ensemble network is 94.
    2. The  missclassification error of the smaller network is 123.
    3. The  missclassification error of the smaller network trained on probabilities is 94. 
-
+3. Using the code, you can also learn how to use multiple tensorflow graphs within one python file. I created separate tensorflow graph for the ensemble model and the distill model. I then feed the probabilities generated ensemble model to the distill model during the training.
 ## Conclusion:
 The smaller network was able to extract all the information from the ensemble model when trained on probabilities.
 
